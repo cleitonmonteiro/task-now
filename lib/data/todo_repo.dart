@@ -1,4 +1,4 @@
-import 'package:task_now/todo.dart';
+import 'package:task_now/data/todo.dart';
 
 abstract class TodoRepo {
   Future<List<Todo>> getAllTodos();

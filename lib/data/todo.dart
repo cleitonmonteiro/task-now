@@ -1,4 +1,4 @@
-import 'package:task_now/utils.dart';
+import 'package:task_now/core/utils.dart';
 
 class Todo {
   int id;
@@ -30,5 +30,9 @@ class Todo {
   @override
   String toString() {
     return 'Todo {$description, $isDone}';
+  }
+
+  void toggleDone() {
+    isDone = !isDone;
   }
 }

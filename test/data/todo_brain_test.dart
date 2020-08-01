@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:task_now/todo.dart';
+import 'package:task_now/data/todo.dart';
 import 'package:task_now/todo_brain.dart';
-import 'package:task_now/todo_repo.dart';
+import 'package:task_now/data/todo_repo.dart';
 
 class MockTodoRepo extends Mock implements TodoRepo {}
 

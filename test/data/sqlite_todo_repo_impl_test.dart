@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:task_now/database.dart';
-import 'package:task_now/sqlite_todo_repo_impl.dart';
-import 'package:task_now/todo.dart';
+import 'package:task_now/data/database.dart';
+import 'package:task_now/data/sqlite_todo_repo_impl.dart';
+import 'package:task_now/data/todo.dart';
 
 class TestDatabaseProvider extends DatabaseProvider {
   TestDatabaseProvider() : super(name: 'test');

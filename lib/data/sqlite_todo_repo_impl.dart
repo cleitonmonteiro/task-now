@@ -1,7 +1,7 @@
-import 'package:task_now/database.dart';
-import 'package:task_now/todo.dart';
-import 'package:task_now/todo_repo.dart';
-import 'package:task_now/utils.dart';
+import 'package:task_now/data/database.dart';
+import 'package:task_now/data/todo.dart';
+import 'package:task_now/data/todo_repo.dart';
+import 'package:task_now/core/utils.dart';
 
 class SqliteTodoRepoImpl implements TodoRepo {
   SqliteTodoRepoImpl(this.dbProvider);
