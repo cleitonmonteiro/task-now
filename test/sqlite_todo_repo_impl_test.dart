@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -52,8 +54,29 @@ void main() {
 
     final result = await datasource.getAllTodos();
 
-    expect(result.length, isNonZero);
-    //TODO: vericicar todos sem id se sao iguais
+    expect(result.length, tTodos.length);
+    expect(tTodos.map((e) => e.toString()), result.map((e) => e.toString()));
+  });
+
+  test('should delete all todos', () async {
+    final tTodos = [
+      Todo(description: 'Read many book'),
+      Todo(description: 'Read another book'),
+      Todo(description: 'Start linux shell')
+    ];
+
+    for (var todo in tTodos) {
+      final inserted = await datasource.insertTodo(todo);
+      expect(inserted, true);
+    }
+
+    final result = await datasource.deleteAllTodos();
+
+    expect(result, true);
+
+    final todos = await datasource.getAllTodos();
+
+    expect(todos.length, isZero);
   });
 
   test('should delete a todo by id', () async {
@@ -82,5 +105,26 @@ void main() {
     final result = await datasource.deleteTodoById(fakeId);
 
     expect(result, false);
+  });
+
+  test('should update a todo', () async {
+    var tTodo = Todo(description: 'Read many book');
+
+    final insertedOk = await datasource.insertTodo(tTodo);
+    expect(insertedOk, true);
+
+    var todos = await datasource.getAllTodos();
+    final inserted = todos.first;
+
+    final newDescription = 'make it works';
+
+    inserted.description = newDescription;
+    final updatedOk = await datasource.updateTodo(inserted);
+
+    expect(updatedOk, true);
+
+    todos = await datasource.getAllTodos();
+
+    expect(todos.first.description, newDescription);
   });
 }

@@ -26,4 +26,9 @@ class Todo {
       "is_done": this.isDone ? 1 : 0,
     };
   }
+
+  @override
+  String toString() {
+    return 'Todo {$description, $isDone}';
+  }
 }
