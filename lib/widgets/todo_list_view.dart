@@ -10,6 +10,7 @@ class TodoListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: todos.length,
       itemBuilder: (context, index) => TodoItem(todo: todos[index]),

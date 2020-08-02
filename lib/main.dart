@@ -18,8 +18,8 @@ class App extends StatelessWidget {
         title: 'Task Now',
         theme: ThemeData(
           primarySwatch: Colors.lightBlue,
+          primaryColor: Colors.lightBlue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          buttonColor: Colors.green,
           buttonTheme: ButtonThemeData().copyWith(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             minWidth: 30.0,

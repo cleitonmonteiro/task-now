@@ -15,6 +15,7 @@ class TodoItem extends StatelessWidget {
       fontSize: 18.0,
       fontWeight: FontWeight.w800,
       decoration: todo.isDone ? TextDecoration.lineThrough : null,
+      color: todo.isDone ? Colors.grey : Colors.black,
     );
   }
 
@@ -29,8 +30,11 @@ class TodoItem extends StatelessWidget {
     );
 
     final todoIcon = todo.isDone
-        ? Icon(Icons.check_box)
-        : Icon(Icons.check_box_outline_blank);
+        ? Icon(
+            Icons.done,
+            color: Colors.green,
+          )
+        : Icon(Icons.radio_button_unchecked);
 
     return Dismissible(
       direction: DismissDirection.startToEnd,

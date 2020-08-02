@@ -9,31 +9,29 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: 50.0, top: 30.0, bottom: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Tasks',
-                      style: TextStyle(
-                        fontSize: 32.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(
+        title: Text(
+          'Today',
+          style: TextStyle().copyWith(color: Colors.white),
+        ),
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Username'),
+              decoration: BoxDecoration(
+                color: Theme.of(context).accentColor,
               ),
-              Consumer<TodoBrain>(
-                builder: (context, brain, _) => TodoListView(brain.todos),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Consumer<TodoBrain>(
+          builder: (context, brain, _) => TodoListView(brain.todos),
         ),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -41,7 +39,10 @@ class HomePage extends StatelessWidget {
         onPressed: () async {
           _showAddTodoSheet(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
