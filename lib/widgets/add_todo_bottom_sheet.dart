@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_now/core/utils.dart';
 import 'package:task_now/data/todo.dart';
 import 'package:task_now/todo_brain.dart';
+import 'package:task_now/widgets/datetime_picker_dialog.dart';
 
 class AddTodoBottomSheet extends StatefulWidget {
   @override
@@ -12,6 +14,17 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   String _description;
   DateTime date;
   bool _enableSave = false;
+
+  @override
+  void initState() {
+    super.initState();
+    date = _defaultDate;
+  }
+
+  DateTime get _defaultDate => DateTime.now().add(Duration(hours: 2));
+
+  String get _dateButtomText =>
+      isToday(date) ? 'Today' : '${kMonths[date.month]} ${date.day}';
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +49,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 _description = value;
 
                 if (_description.isNotEmpty != _enableSave) {
-                  setState(() {
-                    _enableSave = !_enableSave;
-                  });
+                  setState(() => _enableSave = !_enableSave);
                 }
               },
               maxLines: 3,
@@ -52,9 +63,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
             Row(
               children: <Widget>[
                 OutlineButton(
-                  onPressed: () {
-                    showMD(context);
-                  },
+                  onPressed: _showDateTimeDialog,
                   child: Row(
                     children: <Widget>[
                       Icon(
@@ -65,7 +74,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                       Padding(
                         padding: EdgeInsets.only(left: 7.0),
                         child: Text(
-                          'Today',
+                          _dateButtomText,
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                           ),
@@ -118,25 +127,17 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
     Navigator.pop(context);
   }
 
-  Future<DateTime> showMD(BuildContext context) async {
+  void _showDateTimeDialog() async {
     final now = DateTime.now();
-    date = now;
-    final dialog = Dialog(
-      child: CalendarDatePicker(
-        initialDate: date,
-        firstDate: DateTime(now.year - 2),
-        lastDate: DateTime(now.year + 2),
-        onDateChanged: (value) {
-          setState(() {
-            date = value;
-          });
-        },
-      ),
+    final selectedDate = await showDatetimePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 2),
+      lastDate: DateTime(now.year + 2),
     );
 
-    return await showDialog<DateTime>(
-      context: context,
-      builder: (context) => dialog,
-    );
+    if (selectedDate != null) {
+      setState(() => date = selectedDate);
+    }
   }
 }
