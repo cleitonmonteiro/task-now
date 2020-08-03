@@ -148,9 +148,7 @@ class _DateTimePickerDialogState extends State<DateTimePickerDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Flexible(
-            child: datePicker,
-          ),
+          Flexible(child: datePicker),
           setTimeButtom,
           actions,
         ],

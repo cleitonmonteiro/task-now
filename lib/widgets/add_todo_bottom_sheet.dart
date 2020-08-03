@@ -12,19 +12,18 @@ class AddTodoBottomSheet extends StatefulWidget {
 
 class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   String _description;
-  DateTime date;
+  DateTime _date;
   bool _enableSave = false;
 
   @override
   void initState() {
     super.initState();
-    date = _defaultDate;
+    _date = _defaultDate;
   }
 
   DateTime get _defaultDate => DateTime.now().add(Duration(hours: 2));
 
-  String get _dateButtomText =>
-      isToday(date) ? 'Today' : '${kMonths[date.month]} ${date.day}';
+  String get _dateButtomText => isToday(_date) ? 'Today' : formatDate(_date);
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +120,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   }
 
   void _save() async {
-    final newTodo = Todo(description: _description);
+    final newTodo = Todo(description: _description, date: _date);
     final brain = Provider.of<TodoBrain>(context, listen: false);
     await brain.addTodo(newTodo);
     Navigator.pop(context);
@@ -137,7 +136,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
     );
 
     if (selectedDate != null) {
-      setState(() => date = selectedDate);
+      setState(() => _date = selectedDate);
     }
   }
 }
