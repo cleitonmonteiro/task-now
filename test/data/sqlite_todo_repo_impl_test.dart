@@ -40,9 +40,18 @@ void main() {
 
   test('should get all todos', () async {
     final tTodos = [
-      Todo(description: 'Read many book'),
-      Todo(description: 'Read another book'),
-      Todo(description: 'Start linux shell')
+      Todo(
+        description: 'Read many book',
+        date: DateTime.now().add(Duration(hours: 2)),
+      ),
+      Todo(
+        description: 'Read another book',
+        date: DateTime.now().add(Duration(hours: 2)),
+      ),
+      Todo(
+        description: 'Start linux shell',
+        date: DateTime.now().add(Duration(hours: 2)),
+      )
     ];
 
     for (var todo in tTodos) {
@@ -78,7 +87,10 @@ void main() {
   });
 
   test('should delete a todo by id', () async {
-    final tTodo = Todo(description: 'Read many book');
+    final tTodo = Todo(
+      description: 'Read many book',
+      date: DateTime.now().add(Duration(hours: 2)),
+    );
 
     final inserted = await datasource.insertTodo(tTodo);
 
@@ -92,7 +104,10 @@ void main() {
   });
 
   test('should dont delete a todo by wrong id', () async {
-    final tTodo = Todo(description: 'Read many book');
+    final tTodo = Todo(
+      description: 'Read many book',
+      date: DateTime.now().add(Duration(hours: 2)),
+    );
 
     final inserted = await datasource.insertTodo(tTodo);
 
@@ -106,7 +121,10 @@ void main() {
   });
 
   test('should update a todo', () async {
-    var tTodo = Todo(description: 'Read many book');
+    var tTodo = Todo(
+      description: 'Read many book',
+      date: DateTime.now().add(Duration(hours: 2)),
+    );
 
     final insertedOk = await datasource.insertTodo(tTodo);
     expect(insertedOk, true);
