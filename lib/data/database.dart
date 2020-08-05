@@ -8,7 +8,18 @@ const kTodoTableSql = "$kTodoTable ("
     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
     "description TEXT, "
     "is_done INTEGER, "
-    "date TEXT"
+    "date TEXT,"
+    "project_id INTEGER NOT NULL, "
+    "FOREIGN KEY (project_id) "
+    "REFERENCES $kProjectTable (id) "
+    "ON UPDATE CASCADE "
+    "ON DELETE CASCADE "
+    ")";
+
+const kProjectTable = 'project';
+const kProjectTableSql = "$kProjectTable ("
+    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    "name TEXT"
     ")";
 
 class DatabaseProvider {
@@ -32,15 +43,22 @@ class DatabaseProvider {
       version: 1,
       onCreate: onCreate,
       onOpen: onOpen,
+      onConfigure: onConfigure,
     );
     return db;
   }
 
+  void onConfigure(Database database) async {
+    await database.execute('PRAGMA foreign_keys = ON;');
+  }
+
   void onOpen(Database database) async {
+    await database.execute('CREATE TABLE IF NOT EXISTS $kProjectTableSql');
     await database.execute('CREATE TABLE IF NOT EXISTS $kTodoTableSql');
   }
 
   void onCreate(Database database, int version) async {
+    await database.execute('CREATE TABLE $kProjectTableSql');
     await database.execute('CREATE TABLE $kTodoTableSql');
   }
 }

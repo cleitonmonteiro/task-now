@@ -1,4 +1,5 @@
-import 'package:task_now/data/todo.dart';
+import 'package:task_now/data/models/project.dart';
+import 'package:task_now/data/models/todo.dart';
 
 abstract class TodoRepo {
   Future<List<Todo>> getAllTodos();
@@ -6,4 +7,10 @@ abstract class TodoRepo {
   Future<bool> deleteTodoById(int id);
   Future<bool> updateTodo(Todo todo);
   Future<bool> deleteAllTodos();
+
+  Future<List<Project>> getAllProjects();
+  Future<bool> insertProject(Project project);
+  Future<bool> deleteProjectById(int id);
+  Future<bool> updateProject(Project project);
+  Future<bool> deleteAllProjects();
 }

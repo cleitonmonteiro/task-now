@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_now/data/todo.dart';
+import 'package:task_now/data/models/todo.dart';
 import 'package:task_now/widgets/todo_item.dart';
 
 class TodoListView extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_now/core/utils.dart';
-import 'package:task_now/data/todo.dart';
+import 'package:task_now/data/models/todo.dart';
 import 'package:task_now/todo_brain.dart';
 
 class TodoItem extends StatelessWidget {
