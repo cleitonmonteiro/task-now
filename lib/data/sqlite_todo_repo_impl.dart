@@ -24,8 +24,9 @@ class SqliteTodoRepoImpl implements TodoRepo {
     final db = await dbProvider.database;
 
     final result = await db.query(kTodoTable);
-    final todos = result.map((todoJson) => Todo.fromJson(todoJson));
-    return todos.toList();
+    final todos = result.map((todoJson) => Todo.fromJson(todoJson)).toList();
+
+    return todos;
   }
 
   @override
@@ -81,14 +82,19 @@ class SqliteTodoRepoImpl implements TodoRepo {
     final result = await db.query(kProjectTable);
     final projects = result.map((projectJson) => Project.fromJson(projectJson));
 
+    List<Project> fullProjects = [];
+
     for (var project in projects) {
       final todos = (await db.query(kTodoTable,
               where: 'project_id = ?', whereArgs: [project.id]))
-          .map((todoJson) => Todo.fromJson(todoJson));
+          .map((todoJson) => Todo.fromJson(todoJson))
+          .toList();
 
-      project.todos = todos.toList();
+      project.todos = todos;
+      fullProjects.add(project);
     }
-    return projects.toList();
+
+    return fullProjects;
   }
 
   @override

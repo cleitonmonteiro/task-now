@@ -25,6 +25,9 @@ class App extends StatelessWidget {
             minWidth: 30.0,
             height: 30.0,
           ),
+          iconTheme: IconThemeData().copyWith(
+            color: Colors.white,
+          ),
         ),
         home: HomePage(),
       ),

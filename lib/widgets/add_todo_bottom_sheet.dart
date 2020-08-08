@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_now/core/utils.dart';
+import 'package:task_now/data/models/project.dart';
 import 'package:task_now/data/models/todo.dart';
 import 'package:task_now/todo_brain.dart';
 import 'package:task_now/widgets/datetime_picker_dialog.dart';
@@ -13,15 +14,18 @@ class AddTodoBottomSheet extends StatefulWidget {
 class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   String _description;
   DateTime _date;
+  Project _project;
   bool _enableSave = false;
 
   @override
   void initState() {
     super.initState();
     _date = _defaultDate;
+    _project = _defaultProject;
   }
 
   DateTime get _defaultDate => DateTime.now().add(Duration(hours: 2));
+  Project get _defaultProject => Provider.of<TodoBrain>(context).projects.first;
 
   String get _dateButtomText => isToday(_date) ? 'Today' : formatDate(_date);
 
@@ -86,7 +90,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                   padding: const EdgeInsets.only(left: 10.0),
                   child: OutlineButton(
                     onPressed: () {
-                      //TODO: Selecionar projeto da tarefa
+                      _showProjectDialog(context);
                     },
                     child: Row(
                       children: <Widget>[
@@ -97,7 +101,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 7.0),
-                          child: Text('Inbox'),
+                          child: Text(_project.name),
                         ),
                       ],
                     ),
@@ -107,9 +111,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 FlatButton(
                   textColor: Theme.of(context).accentColor,
                   onPressed: _enableSave ? _save : null,
-                  child: Text(
-                    'Save',
-                  ),
+                  child: Text('Save'),
                 )
               ],
             ),
@@ -120,7 +122,12 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   }
 
   void _save() async {
-    final newTodo = Todo(description: _description, date: _date);
+    final newTodo = Todo(
+      description: _description,
+      date: _date,
+      projectId: _project.id,
+    );
+
     final brain = Provider.of<TodoBrain>(context, listen: false);
     await brain.addTodo(newTodo);
     Navigator.pop(context);
@@ -138,5 +145,58 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
     if (selectedDate != null) {
       setState(() => _date = selectedDate);
     }
+  }
+
+  void _showProjectDialog(BuildContext context) async {
+    final projects = Provider.of<TodoBrain>(context, listen: false).projects;
+
+    final selectedProject = await showDialog<Project>(
+      context: context,
+      builder: (context) => _SelectProjectDialog(projects),
+    );
+
+    if (selectedProject != null) {
+      setState(() => _project = selectedProject);
+    }
+  }
+}
+
+class _SelectProjectDialog extends StatelessWidget {
+  const _SelectProjectDialog(this.projects);
+
+  final List<Project> projects;
+
+  @override
+  Widget build(BuildContext context) {
+    final Decoration decoration = BoxDecoration(
+      border: Border(
+        bottom: Divider.createBorderSide(context, color: Colors.grey),
+      ),
+    );
+
+    final projectsList = ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        final project = projects[index];
+        return DecoratedBox(
+          decoration: decoration,
+          child: ListTile(
+            title: Text(project.name),
+            onTap: () => Navigator.pop(context, project),
+          ),
+        );
+      },
+    );
+
+    return Dialog(
+      child: Container(
+        height: projects.length < 3 ? 80 : 200,
+        child: SingleChildScrollView(
+          child: projectsList,
+        ),
+      ),
+    );
   }
 }

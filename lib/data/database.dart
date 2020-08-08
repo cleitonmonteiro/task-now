@@ -19,7 +19,8 @@ const kTodoTableSql = "$kTodoTable ("
 const kProjectTable = 'project';
 const kProjectTableSql = "$kProjectTable ("
     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "name TEXT"
+    "name TEXT, "
+    "color INTEGER"
     ")";
 
 class DatabaseProvider {
