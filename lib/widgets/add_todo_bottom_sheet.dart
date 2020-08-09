@@ -5,8 +5,13 @@ import 'package:task_now/data/models/project.dart';
 import 'package:task_now/data/models/todo.dart';
 import 'package:task_now/todo_brain.dart';
 import 'package:task_now/widgets/datetime_picker_dialog.dart';
+import 'package:task_now/widgets/project_list_view.dart';
 
 class AddTodoBottomSheet extends StatefulWidget {
+  const AddTodoBottomSheet(this.defaultProject);
+
+  final Project defaultProject;
+
   @override
   _AddTodoBottomSheetState createState() => _AddTodoBottomSheetState();
 }
@@ -21,11 +26,10 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   void initState() {
     super.initState();
     _date = _defaultDate;
-    _project = _defaultProject;
+    _project = widget.defaultProject;
   }
 
   DateTime get _defaultDate => DateTime.now().add(Duration(hours: 2));
-  Project get _defaultProject => Provider.of<TodoBrain>(context).projects.first;
 
   String get _dateButtomText => isToday(_date) ? 'Today' : formatDate(_date);
 
@@ -48,7 +52,6 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
             TextField(
               cursorColor: Theme.of(context).accentColor,
               onChanged: (value) {
-                //TODO: implementar vericacao de mudanca antes de alterar
                 _description = value;
 
                 if (_description.isNotEmpty != _enableSave) {
@@ -89,15 +92,13 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: OutlineButton(
-                    onPressed: () {
-                      _showProjectDialog(context);
-                    },
+                    onPressed: () => _showProjectDialog(),
                     child: Row(
                       children: <Widget>[
                         Icon(
                           Icons.brightness_1,
                           size: 16.0,
-                          color: Colors.red,
+                          color: _project.color,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 7.0),
@@ -147,56 +148,30 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
     }
   }
 
-  void _showProjectDialog(BuildContext context) async {
+  void _showProjectDialog() async {
     final projects = Provider.of<TodoBrain>(context, listen: false).projects;
 
     final selectedProject = await showDialog<Project>(
       context: context,
-      builder: (context) => _SelectProjectDialog(projects),
+      builder: (context) => Dialog(
+        child: Card(
+          elevation: 0.0,
+          margin: EdgeInsets.symmetric(vertical: 4.0),
+          child: SingleChildScrollView(
+            child: ProjectListView(
+              projects: projects,
+              selectedProject: _project,
+              onTapCallback: (Project project) {
+                Navigator.pop(context, project);
+              },
+            ),
+          ),
+        ),
+      ),
     );
 
     if (selectedProject != null) {
       setState(() => _project = selectedProject);
     }
-  }
-}
-
-class _SelectProjectDialog extends StatelessWidget {
-  const _SelectProjectDialog(this.projects);
-
-  final List<Project> projects;
-
-  @override
-  Widget build(BuildContext context) {
-    final Decoration decoration = BoxDecoration(
-      border: Border(
-        bottom: Divider.createBorderSide(context, color: Colors.grey),
-      ),
-    );
-
-    final projectsList = ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: projects.length,
-      itemBuilder: (context, index) {
-        final project = projects[index];
-        return DecoratedBox(
-          decoration: decoration,
-          child: ListTile(
-            title: Text(project.name),
-            onTap: () => Navigator.pop(context, project),
-          ),
-        );
-      },
-    );
-
-    return Dialog(
-      child: Container(
-        height: projects.length < 3 ? 80 : 200,
-        child: SingleChildScrollView(
-          child: projectsList,
-        ),
-      ),
-    );
   }
 }

@@ -74,14 +74,6 @@ void main() {
   });
 
   group('Todos', () {
-    test('should get a list of todos', () async {
-      final todos = brain.todos;
-
-      verify(repo.getAllTodos());
-
-      expect(todos, tTodos);
-    });
-
     test('should insert a new todo', () async {
       final newTodo = Todo(description: 'Organize office', projectId: 1);
       when(repo.insertTodo(newTodo)).thenAnswer((_) => Future.value(true));

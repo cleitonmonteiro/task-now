@@ -37,7 +37,7 @@ class TodoItem extends StatelessWidget {
         ? Icon(Icons.done, color: Colors.green)
         : Icon(Icons.radio_button_unchecked);
 
-    Widget body = Padding(
+    final body = Padding(
       padding: EdgeInsets.only(left: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,14 +85,14 @@ class TodoItem extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         child: Row(
           children: <Widget>[
-            InkWell(
+            GestureDetector(
               child: todoIcon,
               onTap: () {
                 todo.toggleDone();
                 brain.updateTodo(todo);
               },
             ),
-            body,
+            body
           ],
         ),
       ),

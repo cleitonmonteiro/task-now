@@ -3,13 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:task_now/data/models/project.dart';
 import 'package:task_now/todo_brain.dart';
 
-class CustomColor {
-  CustomColor(this.color, this.name);
-
-  final Color color;
-  final String name;
-}
-
 class NewProjectPage extends StatefulWidget {
   @override
   _NewProjectPageState createState() => _NewProjectPageState();
@@ -17,16 +10,16 @@ class NewProjectPage extends StatefulWidget {
 
 class _NewProjectPageState extends State<NewProjectPage> {
   final projectsColors = [
-    CustomColor(Colors.blueAccent, 'Blue Accent'),
-    CustomColor(Colors.red, 'Red'),
-    CustomColor(Colors.orange, 'Orange'),
-    CustomColor(Colors.amber, 'Amber'),
-    CustomColor(Colors.brown, 'Brown'),
-    CustomColor(Colors.green, 'Green'),
+    _CustomColor(Colors.blueAccent, 'Blue Accent'),
+    _CustomColor(Colors.red, 'Red'),
+    _CustomColor(Colors.orange, 'Orange'),
+    _CustomColor(Colors.amber, 'Amber'),
+    _CustomColor(Colors.brown, 'Brown'),
+    _CustomColor(Colors.green, 'Green'),
   ];
 
   String _projectName;
-  CustomColor _projectColor;
+  _CustomColor _projectColor;
   bool _enableSave = false;
 
   @override
@@ -54,10 +47,11 @@ class _NewProjectPageState extends State<NewProjectPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.send),
+            color: Colors.white,
             onPressed: _enableSave ? _save : null,
           ),
         ],
-        iconTheme: Theme.of(context).iconTheme,
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
@@ -81,7 +75,7 @@ class _NewProjectPageState extends State<NewProjectPage> {
               ),
             ),
             SizedBox(height: 10.0),
-            DropdownButton<CustomColor>(
+            DropdownButton<_CustomColor>(
               isExpanded: true,
               value: _projectColor,
               onChanged: (color) {
@@ -90,7 +84,7 @@ class _NewProjectPageState extends State<NewProjectPage> {
                 }
               },
               items: projectsColors.map((color) {
-                return DropdownMenuItem<CustomColor>(
+                return DropdownMenuItem<_CustomColor>(
                   value: color,
                   child: Container(
                     child: Row(
@@ -113,4 +107,11 @@ class _NewProjectPageState extends State<NewProjectPage> {
       ),
     );
   }
+}
+
+class _CustomColor {
+  _CustomColor(this.color, this.name);
+
+  final Color color;
+  final String name;
 }

@@ -17,16 +17,19 @@ class ProjectItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = selected ? Theme.of(context).selectedRowColor : Colors.white;
 
+    var trailing = <Widget>[];
+    if (project.todos.isNotEmpty) {
+      trailing = [
+        Spacer(),
+        Text(project.todos.length.toString()),
+      ];
+    }
+
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: Divider.createBorderSide(context),
-          ),
-          color: color,
-        ),
+        color: color,
         child: Row(
           children: [
             Icon(
@@ -36,6 +39,7 @@ class ProjectItem extends StatelessWidget {
             ),
             SizedBox(width: 16.0),
             Text(project.name),
+            ...trailing,
           ],
         ),
       ),

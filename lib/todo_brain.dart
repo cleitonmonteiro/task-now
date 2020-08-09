@@ -6,62 +6,54 @@ import 'package:task_now/data/todo_repo.dart';
 
 class TodoBrain extends ChangeNotifier {
   TodoBrain(this.repo) {
-    updateTodos();
     updateProjects();
   }
 
   final TodoRepo repo;
-  List<Todo> _todos = [];
-  List<Project> _projects = [];
-  Project _selectedProject;
-
-  List<Todo> get todos => _todos;
-  List<Project> get projects => _projects;
-  Project get selectedProject => _selectedProject;
-
-  void updateTodos() async {
-    _todos = await repo.getAllTodos();
-
-    notifyListeners();
-  }
+  List<Project> projects = [];
+  Project selectedProject;
 
   void updateProjects() async {
-    _projects = await repo.getAllProjects();
+    projects = await repo.getAllProjects();
 
     if (projects.isEmpty) {
       final inbox = Project(name: 'Inbox', color: Colors.blue);
       await repo.insertProject(inbox);
-      _projects = await repo.getAllProjects();
+      projects = await repo.getAllProjects();
     }
 
-    _selectedProject = _projects.first;
+    if (selectedProject == null) {
+      selectedProject = projects.first;
+    }
+
     notifyListeners();
   }
 
   void updateSelectedProject(Project project) {
-    _selectedProject = project;
-    // TODO: vericicar antes de mudar
-    notifyListeners();
+    if (selectedProject != project) {
+      selectedProject = project;
+      notifyListeners();
+    }
   }
 
   Future<bool> addTodo(Todo todo) async {
     final result = await repo.insertTodo(todo);
 
-    updateTodos();
+    updateProjects();
     return result;
   }
 
   Future<bool> deleteTodoById(int id) async {
     final result = await repo.deleteTodoById(id);
 
-    updateTodos();
+    updateProjects();
     return result;
   }
 
   Future<bool> updateTodo(Todo todo) async {
     final result = await repo.updateTodo(todo);
 
-    updateTodos();
+    updateProjects();
     return result;
   }
 
@@ -76,7 +68,6 @@ class TodoBrain extends ChangeNotifier {
     final result = await repo.deleteProjectById(id);
 
     updateProjects();
-    updateTodos();
     return result;
   }
 

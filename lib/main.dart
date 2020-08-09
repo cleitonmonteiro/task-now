@@ -19,14 +19,12 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.lightBlue,
           primaryColor: Colors.lightBlue,
+          backgroundColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           buttonTheme: ButtonThemeData().copyWith(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             minWidth: 30.0,
             height: 30.0,
-          ),
-          iconTheme: IconThemeData().copyWith(
-            color: Colors.white,
           ),
         ),
         home: HomePage(),

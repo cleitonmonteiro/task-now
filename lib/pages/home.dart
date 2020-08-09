@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:task_now/data/models/project.dart';
 import 'package:task_now/pages/new_project.dart';
 import 'package:task_now/pages/no_tasks.dart';
 import 'package:task_now/todo_brain.dart';
 import 'package:task_now/widgets/add_todo_bottom_sheet.dart';
-import 'package:task_now/widgets/project_item.dart';
+import 'package:task_now/widgets/project_list_view.dart';
 import 'package:task_now/widgets/todo_list_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,86 +26,83 @@ class HomePage extends StatelessWidget {
               brain.selectedProject.name,
               style: TextStyle().copyWith(color: Colors.white),
             ),
-            iconTheme: Theme.of(context).iconTheme,
+            iconTheme:
+                Theme.of(context).iconTheme.copyWith(color: Colors.white),
           ),
           drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                // TODO: DrawerHeader
-                DrawerHeader(
-                  margin: EdgeInsets.zero,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
+            child: DecoratedBox(
+              decoration:
+                  BoxDecoration(color: Theme.of(context).backgroundColor),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).padding.top,
+                    color: Theme.of(context).primaryColor,
                   ),
-                ),
-                // TODO: button para adicionar um novo porjeto
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.list,
-                        size: 28.0,
-                        color: Colors.black,
-                      ),
-                      const SizedBox(width: 16.0),
-                      const Text(
-                        'Projects',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Spacer(),
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          Icons.add,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.list,
                           size: 28.0,
-                          color: Theme.of(context).primaryColor,
+                          color: Colors.black,
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NewProjectPage(),
-                            ),
-                          );
-                        },
+                        const SizedBox(width: 16.0),
+                        const Text(
+                          'Projects',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            Icons.add,
+                            size: 28.0,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          onPressed: () => _addNewProject(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(height: 0.0),
+                  ProjectListView(
+                    projects: brain.projects,
+                    selectedProject: brain.selectedProject,
+                    onTapCallback: (project) async {
+                      brain.updateSelectedProject(project);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  _RowButton(
+                    onTap: () => _addNewProject(context),
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Theme.of(context).primaryColor,
+                        size: 18.0,
                       ),
+                      SizedBox(width: 16.0),
+                      Text('Add project'),
                     ],
                   ),
-                ),
-                Divider(height: 0.0),
-                ListView.builder(
-                  padding: EdgeInsets.zero,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: brain.projects.length,
-                  itemBuilder: (context, index) {
-                    final project = brain.projects[index];
-                    return ProjectItem(
-                      project: project,
-                      onTap: () async {
-                        brain.updateSelectedProject(project);
-                        Navigator.pop(context);
-                      },
-                      selected: project == brain.selectedProject,
-                    );
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          body: brain.selectedProject.todos.length == 0
+          body: brain.selectedProject.todos.isEmpty
               ? NoTasksPage()
               : SingleChildScrollView(
                   child: TodoListView(brain.selectedProject.todos),
                 ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              _showAddTodoSheet(context);
+              _showAddTodoSheet(context, brain.projects.first);
             },
             child: Icon(
               Icons.add,
@@ -116,12 +114,50 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _showAddTodoSheet(BuildContext context) async {
+  void _addNewProject(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NewProjectPage(),
+      ),
+    );
+  }
+
+  void _showAddTodoSheet(BuildContext context, Project defaultProject) async {
     return showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
-      builder: (context) => AddTodoBottomSheet(),
+      builder: (context) => AddTodoBottomSheet(defaultProject),
+    );
+  }
+}
+
+class _RowButton extends StatelessWidget {
+  const _RowButton({
+    @required this.onTap,
+    @required this.children,
+    this.padding = const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+    this.backgroundColor = Colors.white,
+  })  : assert(onTap != null),
+        assert(children != null);
+
+  final Function onTap;
+  final List<Widget> children;
+  final EdgeInsets padding;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: padding,
+        color: backgroundColor,
+        child: Row(
+          children: children,
+        ),
+      ),
     );
   }
 }

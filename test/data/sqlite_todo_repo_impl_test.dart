@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -28,9 +29,9 @@ void main() {
   });
 
   final tProjects = [
-    Project(name: 'Inbox'),
-    Project(name: 'Task Now'),
-    Project(name: 'Camali'),
+    Project(name: 'Inbox', color: Colors.red),
+    Project(name: 'Task Now', color: Colors.blue),
+    Project(name: 'Camali', color: Colors.green),
   ];
 
   group('Projects', () {
@@ -105,7 +106,7 @@ void main() {
     });
 
     test('should update a project', () async {
-      var tProject = Project(name: 'Mail');
+      var tProject = Project(name: 'Mail', color: Colors.blueAccent);
 
       final insertedOk = await repo.insertProject(tProject);
       expect(insertedOk, true);
