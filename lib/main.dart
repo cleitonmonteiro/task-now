@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_now/app_state_notifier.dart';
+import 'package:task_now/app_theme.dart';
 import 'package:task_now/data/database.dart';
 import 'package:task_now/data/sqlite_todo_repo_impl.dart';
 import 'package:task_now/todo_brain.dart';
@@ -12,21 +14,23 @@ void main() {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TodoBrain>(
-      create: (context) => TodoBrain(SqliteTodoRepoImpl(DatabaseProvider())),
-      child: MaterialApp(
-        title: 'Task Now',
-        theme: ThemeData(
-          primarySwatch: Colors.lightBlue,
-          primaryColor: Colors.lightBlue,
-          backgroundColor: Colors.white,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          buttonTheme: ButtonThemeData().copyWith(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            minWidth: 30.0,
-            height: 30.0,
-          ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppStateNotifier>(
+          create: (_) => AppStateNotifier(),
         ),
+        ChangeNotifierProvider<TodoBrain>(
+          create: (_) => TodoBrain(SqliteTodoRepoImpl(DatabaseProvider())),
+        ),
+      ],
+      builder: (context, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Task Now',
+        theme: AppTheme.getLightTheme(context),
+        darkTheme: AppTheme.getDarkTheme(context),
+        themeMode: Provider.of<AppStateNotifier>(context).isDarkModeOn
+            ? ThemeMode.dark
+            : ThemeMode.light,
         home: HomePage(),
       ),
     );

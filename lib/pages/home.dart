@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:task_now/app_state_notifier.dart';
 import 'package:task_now/data/models/project.dart';
 import 'package:task_now/pages/new_project.dart';
 import 'package:task_now/pages/no_tasks.dart';
@@ -22,12 +23,17 @@ class HomePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(
-              brain.selectedProject.name,
-              style: TextStyle().copyWith(color: Colors.white),
-            ),
-            iconTheme:
-                Theme.of(context).iconTheme.copyWith(color: Colors.white),
+            title: Text(brain.selectedProject.name),
+            actions: <Widget>[
+              Switch(
+                value: Provider.of<AppStateNotifier>(context).isDarkModeOn,
+                onChanged: (boolVal) {
+                  Provider.of<AppStateNotifier>(context, listen: false)
+                      .updateTheme(boolVal);
+                },
+              ),
+              Icon(Icons.brightness_3),
+            ],
           ),
           drawer: Drawer(
             child: DecoratedBox(
@@ -44,10 +50,10 @@ class HomePage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.list,
                           size: 28.0,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.headline6.color,
                         ),
                         const SizedBox(width: 16.0),
                         const Text(
@@ -60,11 +66,7 @@ class HomePage extends StatelessWidget {
                         Spacer(),
                         IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(
-                            Icons.add,
-                            size: 28.0,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                          icon: Icon(Icons.add, size: 28.0),
                           onPressed: () => _addNewProject(context),
                         ),
                       ],
@@ -81,12 +83,8 @@ class HomePage extends StatelessWidget {
                   ),
                   _RowButton(
                     onTap: () => _addNewProject(context),
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Theme.of(context).primaryColor,
-                        size: 18.0,
-                      ),
+                    children: const [
+                      Icon(Icons.add, size: 18.0),
                       SizedBox(width: 16.0),
                       Text('Add project'),
                     ],
@@ -104,10 +102,7 @@ class HomePage extends StatelessWidget {
             onPressed: () async {
               _showAddTodoSheet(context, brain.projects.first);
             },
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.add, color: Colors.white),
           ),
         );
       },
@@ -138,7 +133,7 @@ class _RowButton extends StatelessWidget {
     @required this.onTap,
     @required this.children,
     this.padding = const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-    this.backgroundColor = Colors.white,
+    this.backgroundColor,
   })  : assert(onTap != null),
         assert(children != null);
 
@@ -153,7 +148,7 @@ class _RowButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: padding,
-        color: backgroundColor,
+        color: backgroundColor ?? Theme.of(context).backgroundColor,
         child: Row(
           children: children,
         ),

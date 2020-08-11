@@ -40,18 +40,13 @@ class _NewProjectPageState extends State<NewProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Add project',
-          style: TextStyle().copyWith(color: Colors.white),
-        ),
+        title: const Text('Add project'),
         actions: [
           IconButton(
             icon: Icon(Icons.send),
-            color: Colors.white,
             onPressed: _enableSave ? _save : null,
           ),
         ],
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),

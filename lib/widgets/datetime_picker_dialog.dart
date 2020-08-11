@@ -132,7 +132,7 @@ class _DateTimePickerDialogState extends State<DateTimePickerDialog> {
           Expanded(
             child: Card(
               elevation: 0.0,
-              color: Theme.of(context).canvasColor,
+              color: Theme.of(context).selectedRowColor,
               child: Padding(
                 padding: const EdgeInsets.all(7.0),
                 child: Text(_timeText),

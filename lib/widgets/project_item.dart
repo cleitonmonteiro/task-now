@@ -15,7 +15,9 @@ class ProjectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? Theme.of(context).selectedRowColor : Colors.white;
+    final color = selected
+        ? Theme.of(context).selectedRowColor
+        : Theme.of(context).backgroundColor;
 
     var trailing = <Widget>[];
     if (project.todos.isNotEmpty) {

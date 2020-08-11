@@ -44,7 +44,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(5.0),
           ),
-          color: Colors.white,
+          color: Theme.of(context).backgroundColor,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -69,6 +69,9 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
             Row(
               children: <Widget>[
                 OutlineButton(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).accentColor,
+                  ),
                   onPressed: _showDateTimeDialog,
                   child: Row(
                     children: <Widget>[
@@ -92,6 +95,9 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: OutlineButton(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).accentColor,
+                    ),
                     onPressed: () => _showProjectDialog(),
                     child: Row(
                       children: <Widget>[
@@ -100,10 +106,8 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                           size: 16.0,
                           color: _project.color,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0),
-                          child: Text(_project.name),
-                        ),
+                        SizedBox(width: 7.0),
+                        Text(_project.name),
                       ],
                     ),
                   ),

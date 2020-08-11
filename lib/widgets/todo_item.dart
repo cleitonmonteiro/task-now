@@ -19,18 +19,14 @@ class TodoItem extends StatelessWidget {
       border: Border(bottom: Divider.createBorderSide(context)),
     );
 
-    final doneColor = todo.isDone ? Colors.grey : Colors.black;
-
     final _descriptionTextStyle = TextStyle(
       fontSize: 18.0,
       fontWeight: FontWeight.w800,
       decoration: todo.isDone ? TextDecoration.lineThrough : null,
-      color: doneColor,
     );
 
     final _detailsTextStyle = TextStyle(
       decoration: todo.isDone ? TextDecoration.lineThrough : null,
-      color: doneColor,
     );
 
     final todoIcon = todo.isDone
@@ -46,7 +42,11 @@ class TodoItem extends StatelessWidget {
           SizedBox(height: 5.0),
           Row(
             children: <Widget>[
-              Icon(Icons.event, size: 18.0, color: doneColor),
+              Icon(
+                Icons.event,
+                size: 18.0,
+                color: Theme.of(context).textTheme.headline6.color,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 7.0),
                 child: Text(
@@ -67,10 +67,7 @@ class TodoItem extends StatelessWidget {
           padding: EdgeInsets.only(left: 10),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              "Completed",
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text("Completed"),
           ),
         ),
         color: Colors.green,

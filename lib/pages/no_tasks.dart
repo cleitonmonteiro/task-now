@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_now/app_state_notifier.dart';
 
 class NoTasksPage extends StatelessWidget {
   @override
@@ -8,12 +10,14 @@ class NoTasksPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Opacity(
-          opacity: 0.1,
-          child: Image.asset(
-            'images/coffee_cup.png',
-            fit: BoxFit.contain,
-            height: height,
+        Consumer<AppStateNotifier>(
+          builder: (context, appState, child) => Opacity(
+            opacity: appState.isDarkModeOn ? 0.4 : 0.1,
+            child: Image.asset(
+              'images/coffee_cup.png',
+              fit: BoxFit.contain,
+              height: height,
+            ),
           ),
         ),
         SizedBox(height: height / 3),
