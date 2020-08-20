@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:task_now/data/database.dart';
+import 'package:task_now/data/database_sqlite.dart';
 import 'package:task_now/data/models/project.dart';
-import 'package:task_now/data/sqlite_todo_repo_impl.dart';
+import 'package:task_now/data/todo_repository_sqlite_impl.dart';
 import 'package:task_now/data/models/todo.dart';
 
-class TestDatabaseProvider extends DatabaseProvider {
+class TestDatabaseProvider extends DatabaseProviderSqlite {
   TestDatabaseProvider() : super(name: 'test');
 
   @override
@@ -20,12 +20,12 @@ class TestDatabaseProvider extends DatabaseProvider {
 }
 
 void main() {
-  SqliteTodoRepoImpl repo;
-  DatabaseProvider databaseProvider;
+  TodoRepositorySqliteImpl repo;
+  DatabaseProviderSqlite databaseProvider;
 
   setUp(() async {
     databaseProvider = TestDatabaseProvider();
-    repo = SqliteTodoRepoImpl(databaseProvider);
+    repo = TodoRepositorySqliteImpl(databaseProvider);
   });
 
   final tProjects = [
@@ -175,18 +175,6 @@ void main() {
       expect(result, true);
     });
 
-    test('should get all todos', () async {
-      for (var todo in tTodos) {
-        final inserted = await repo.insertTodo(todo);
-        expect(inserted, true);
-      }
-
-      final result = await repo.getAllTodos();
-
-      expect(result.length, tTodos.length);
-      expect(tTodos.map((e) => e.toString()), result.map((e) => e.toString()));
-    });
-
     test('should delete all todos', () async {
       for (var todo in tTodos) {
         final inserted = await repo.insertTodo(todo);
@@ -243,6 +231,24 @@ void main() {
       todos = await repo.getAllTodos();
 
       expect(todos.first.description, newDescription);
+    });
+
+    test('should get all todos by project id', () async {
+      for (var todo in tTodos) {
+        final inserted = await repo.insertTodo(todo);
+        expect(inserted, true);
+      }
+
+      final todos = await repo.getTodosByProjectId(tInsertedProject.id);
+
+      expect(todos.length, tTodos.length);
+
+      for (var i = 0; i < todos.length; i++) {
+        expect(todos[i].description, tTodos[i].description);
+        expect(todos[i].date, tTodos[i].date);
+        expect(todos[i].isDone, tTodos[i].isDone);
+        expect(todos[i].projectId, tTodos[i].projectId);
+      }
     });
   });
 }

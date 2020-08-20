@@ -23,8 +23,8 @@ const kProjectTableSql = "$kProjectTable ("
     "color INTEGER"
     ")";
 
-class DatabaseProvider {
-  DatabaseProvider({this.name = 'todo'});
+class DatabaseProviderSqlite {
+  DatabaseProviderSqlite({this.name = 'todo'});
 
   final String name;
   Database _database;

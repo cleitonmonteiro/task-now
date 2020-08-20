@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_now/core/utils.dart';
 import 'package:task_now/data/models/todo.dart';
-import 'package:task_now/todo_brain.dart';
+import 'package:task_now/todo_state_notifier.dart';
 
 class TodoItem extends StatelessWidget {
   const TodoItem({
@@ -13,7 +13,7 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brain = Provider.of<TodoBrain>(context, listen: false);
+    final brain = Provider.of<TodoStateNotifier>(context, listen: false);
 
     final Decoration decoration = BoxDecoration(
       border: Border(bottom: Divider.createBorderSide(context)),
@@ -74,7 +74,7 @@ class TodoItem extends StatelessWidget {
       ),
       onDismissed: (_) {
         todo.isDone = true;
-        brain.updateTodo(todo);
+        brain.saveTodo(todo);
       },
       key: ObjectKey(todo),
       child: Container(
@@ -86,7 +86,7 @@ class TodoItem extends StatelessWidget {
               child: todoIcon,
               onTap: () {
                 todo.toggleDone();
-                brain.updateTodo(todo);
+                brain.saveTodo(todo);
               },
             ),
             body

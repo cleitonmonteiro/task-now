@@ -1,23 +1,14 @@
-import 'package:task_now/data/database.dart';
+import 'package:sqflite/utils/utils.dart';
+import 'package:task_now/data/database_sqlite.dart';
 import 'package:task_now/data/models/project.dart';
 import 'package:task_now/data/models/todo.dart';
-import 'package:task_now/data/todo_repo.dart';
+import 'package:task_now/data/todo_repository.dart';
 import 'package:task_now/core/utils.dart';
 
-class SqliteTodoRepoImpl implements TodoRepo {
-  SqliteTodoRepoImpl(this.dbProvider);
+class TodoRepositorySqliteImpl implements TodoRepository {
+  TodoRepositorySqliteImpl(this.dbProvider);
 
-  final DatabaseProvider dbProvider;
-
-  @override
-  Future<bool> deleteTodoById(int id) async {
-    final db = await dbProvider.database;
-
-    final result =
-        await db.delete(kTodoTable, where: 'id = ?', whereArgs: [id]);
-
-    return intToBool(result);
-  }
+  final DatabaseProviderSqlite dbProvider;
 
   @override
   Future<List<Todo>> getAllTodos() async {
@@ -27,6 +18,16 @@ class SqliteTodoRepoImpl implements TodoRepo {
     final todos = result.map((todoJson) => Todo.fromJson(todoJson)).toList();
 
     return todos;
+  }
+
+  @override
+  Future<bool> deleteTodoById(int id) async {
+    final db = await dbProvider.database;
+
+    final result =
+        await db.delete(kTodoTable, where: 'id = ?', whereArgs: [id]);
+
+    return intToBool(result);
   }
 
   @override
@@ -83,14 +84,11 @@ class SqliteTodoRepoImpl implements TodoRepo {
     final projects = result.map((projectJson) => Project.fromJson(projectJson));
 
     List<Project> fullProjects = [];
-
     for (var project in projects) {
-      final todos = (await db.query(kTodoTable,
-              where: 'project_id = ?', whereArgs: [project.id]))
-          .map((todoJson) => Todo.fromJson(todoJson))
-          .toList();
+      final count = await db.rawQuery(
+          'SELECT COUNT(*) FROM $kTodoTable WHERE id = ${project.id}');
 
-      project.todos = todos;
+      project.length = firstIntValue(count);
       fullProjects.add(project);
     }
 
@@ -113,5 +111,16 @@ class SqliteTodoRepoImpl implements TodoRepo {
         where: 'id = ?', whereArgs: [project.id]);
 
     return intToBool(result);
+  }
+
+  @override
+  Future<List<Todo>> getTodosByProjectId(int projectId) async {
+    final db = await dbProvider.database;
+
+    final result = await db
+        .query(kTodoTable, where: 'project_id = ?', whereArgs: [projectId]);
+
+    final todos = result.map((todoJson) => Todo.fromJson(todoJson)).toList();
+    return todos;
   }
 }

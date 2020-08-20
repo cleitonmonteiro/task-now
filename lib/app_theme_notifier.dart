@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class AppStateNotifier extends ChangeNotifier {
+class AppThemeNotifier extends ChangeNotifier {
   bool isDarkModeOn = false;
 
   void updateTheme(bool isDarkMode) {

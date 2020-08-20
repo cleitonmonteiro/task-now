@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_now/app_state_notifier.dart';
+import 'package:task_now/app_theme_notifier.dart';
 
 class NoTasksPage extends StatelessWidget {
   @override
@@ -10,7 +10,7 @@ class NoTasksPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Consumer<AppStateNotifier>(
+        Consumer<AppThemeNotifier>(
           builder: (context, appState, child) => Opacity(
             opacity: appState.isDarkModeOn ? 0.4 : 0.1,
             child: Image.asset(

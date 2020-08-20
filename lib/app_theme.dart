@@ -35,7 +35,6 @@ class AppTheme {
       dialogBackgroundColor: Colors.grey.shade900,
       selectedRowColor: Colors.grey.withAlpha(20),
       timePickerTheme: TimePickerTheme.of(context).copyWith(
-        hourMinuteUnselectedColor: Colors.red,
         dialBackgroundColor: Colors.grey.withAlpha(20),
       ),
       buttonTheme: kButtonTheme,

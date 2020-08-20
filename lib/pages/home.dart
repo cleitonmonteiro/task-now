@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:task_now/app_state_notifier.dart';
+import 'package:task_now/app_theme_notifier.dart';
 import 'package:task_now/data/models/project.dart';
+import 'package:task_now/pages/loading.dart';
 import 'package:task_now/pages/new_project.dart';
 import 'package:task_now/pages/no_tasks.dart';
-import 'package:task_now/todo_brain.dart';
+import 'package:task_now/todo_state_notifier.dart';
 import 'package:task_now/widgets/add_todo_bottom_sheet.dart';
 import 'package:task_now/widgets/project_list_view.dart';
 import 'package:task_now/widgets/todo_list_view.dart';
@@ -13,24 +14,23 @@ import 'package:task_now/widgets/todo_list_view.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<TodoBrain>(
-      builder: (context, brain, child) {
-        if (brain.selectedProject == null) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+    return Consumer<TodoStateNotifier>(
+      builder: (context, controller, child) {
+        if (controller.selectedProject == null) {
+          return LoadingPage();
         }
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(brain.selectedProject.name),
+            title: Text(controller.selectedProject.name),
             actions: <Widget>[
-              Switch(
-                value: Provider.of<AppStateNotifier>(context).isDarkModeOn,
-                onChanged: (boolVal) {
-                  Provider.of<AppStateNotifier>(context, listen: false)
-                      .updateTheme(boolVal);
-                },
+              Consumer<AppThemeNotifier>(
+                builder: (context, theme, child) => Switch(
+                  value: theme.isDarkModeOn,
+                  onChanged: (value) {
+                    theme.updateTheme(value);
+                  },
+                ),
               ),
               Icon(Icons.brightness_3),
             ],
@@ -74,10 +74,10 @@ class HomePage extends StatelessWidget {
                   ),
                   Divider(height: 0.0),
                   ProjectListView(
-                    projects: brain.projects,
-                    selectedProject: brain.selectedProject,
+                    projects: controller.projects,
+                    selectedProject: controller.selectedProject,
                     onTapCallback: (project) async {
-                      brain.updateSelectedProject(project);
+                      controller.updateSelectedProject(project);
                       Navigator.pop(context);
                     },
                   ),
@@ -93,14 +93,14 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          body: brain.selectedProject.todos.isEmpty
+          body: controller.todos.isEmpty
               ? NoTasksPage()
               : SingleChildScrollView(
-                  child: TodoListView(brain.selectedProject.todos),
+                  child: TodoListView(controller.todos),
                 ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              _showAddTodoSheet(context, brain.projects.first);
+              _showAddTodoSheet(context, controller.projects.first);
             },
             child: Icon(Icons.add, color: Colors.white),
           ),

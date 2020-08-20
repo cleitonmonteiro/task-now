@@ -20,10 +20,10 @@ class ProjectItem extends StatelessWidget {
         : Theme.of(context).backgroundColor;
 
     var trailing = <Widget>[];
-    if (project.todos.isNotEmpty) {
+    if (project.length != 0) {
       trailing = [
         Spacer(),
-        Text(project.todos.length.toString()),
+        Text(project.length.toString()),
       ];
     }
 

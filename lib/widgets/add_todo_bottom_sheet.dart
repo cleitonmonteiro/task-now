@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_now/core/utils.dart';
 import 'package:task_now/data/models/project.dart';
 import 'package:task_now/data/models/todo.dart';
-import 'package:task_now/todo_brain.dart';
+import 'package:task_now/todo_state_notifier.dart';
 import 'package:task_now/widgets/datetime_picker_dialog.dart';
 import 'package:task_now/widgets/project_list_view.dart';
 
@@ -133,8 +133,8 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
       projectId: _project.id,
     );
 
-    final brain = Provider.of<TodoBrain>(context, listen: false);
-    await brain.addTodo(newTodo);
+    final brain = Provider.of<TodoStateNotifier>(context, listen: false);
+    await brain.saveTodo(newTodo);
     Navigator.pop(context);
   }
 
@@ -153,7 +153,8 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   }
 
   void _showProjectDialog() async {
-    final projects = Provider.of<TodoBrain>(context, listen: false).projects;
+    final projects =
+        Provider.of<TodoStateNotifier>(context, listen: false).projects;
 
     final selectedProject = await showDialog<Project>(
       context: context,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_now/data/models/project.dart';
-import 'package:task_now/todo_brain.dart';
+import 'package:task_now/todo_state_notifier.dart';
 
 class NewProjectPage extends StatefulWidget {
   @override
@@ -30,9 +30,9 @@ class _NewProjectPageState extends State<NewProjectPage> {
 
   void _save() async {
     final newProject = Project(name: _projectName, color: _projectColor.color);
-    final brain = Provider.of<TodoBrain>(context, listen: false);
+    final brain = Provider.of<TodoStateNotifier>(context, listen: false);
 
-    await brain.addProject(newProject);
+    await brain.saveProject(newProject);
     Navigator.pop(context);
   }
 

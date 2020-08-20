@@ -27,7 +27,7 @@ class ProjectListView extends StatelessWidget {
         return ProjectItem(
           project: project,
           onTap: () => onTapCallback(project),
-          selected: project == selectedProject,
+          selected: project.id == selectedProject.id,
         );
       },
     );
